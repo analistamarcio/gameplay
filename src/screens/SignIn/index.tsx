@@ -32,18 +32,18 @@ export function SignIn() {
 					
 					<View style={styles.content}>
 						<Text style={styles.title}>
-							Conecte-se{"\n"}
-							e organize suas{"\n"}
-							jogatinas
+							Connect{"\n"}
+							and organize your{"\n"}
+							games
 						</Text>
 
 						<Text style={styles.subtitle}>
-							Crie grupos para jogar seus games{"\n"}
-							favoritos com seus amigos
+							Create groups to play your{"\n"}
+							favourite games with your friends
 						</Text>
 
 						<ButtonIcon
-							title="Entrar com Discord"
+							title="Login using Discord"
 							onPress={handleSignIn}
 						/>
 

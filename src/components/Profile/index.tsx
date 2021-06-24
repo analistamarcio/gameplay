@@ -13,7 +13,7 @@ export function Profile() {
 			<View>
 				<View style={styles.user}>
 					<Text style={styles.greeting}>
-						Olá,
+						Hi,
 					</Text>
 
 					<Text style={styles.username}>
@@ -22,7 +22,7 @@ export function Profile() {
 				</View>
 
 				<Text style={styles.message}>
-					Hoje é dia de vitória
+					It's time to win!
 				</Text>
 			</View>
 			
