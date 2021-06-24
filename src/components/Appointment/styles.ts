@@ -53,4 +53,12 @@ export const styles = StyleSheet.create({
 		marginLeft: 5,
 		marginRight: 10,
 	},
+	guildIconContainer: {
+		width: 64,
+		height: 68,
+		borderRadius: 8,
+		alignItems: "center",
+		justifyContent: "center",
+		marginRight: 20,
+	},
 })

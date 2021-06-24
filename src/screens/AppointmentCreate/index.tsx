@@ -15,7 +15,7 @@ import { CategorySelect } from '../../components/CategorySelect';
 import { RectButton } from 'react-native-gesture-handler';
 import { SmallInput } from "../../components/SmallInput";
 import { ModalView } from '../../components/ModalView';
-// import { Background } from '../../components/Background';
+import { Background } from '../../components/Background';
 import { GuildIcon } from '../../components/GuildIcon';
 import { TextArea } from "../../components/TextArea";
 import { GuildProps } from '../../components/Guild';
@@ -32,9 +32,17 @@ export function AppointmentCreate() {
 		setOpenGuildsModal(true);
 	}
 	
+	function handleCloseGuilds(){
+		setOpenGuildsModal(false);
+	}
+	
 	function handleGuildSelect(guildSelect: GuildProps) {
 		setGuild(guildSelect);
 		setOpenGuildsModal(false);
+	}
+
+	function handleCategorySelect(categoryId: string) {
+		setCategory(categoryId);
 	}
 	
 	return (
@@ -43,7 +51,7 @@ export function AppointmentCreate() {
 			style={styles.container}
 		>
 			<ScrollView>
-				{/* <Background> */}
+				<Background>
 					<Header
 						title="Book a game match"
 					/>
@@ -56,7 +64,7 @@ export function AppointmentCreate() {
 
 					<CategorySelect
 						hasCheckBox
-						setCategory={setCategory}
+						setCategory={handleCategorySelect}
 						categorySelected={category}
 					/>
 
@@ -84,7 +92,7 @@ export function AppointmentCreate() {
 						
 						<View style={styles.field}>
 							<View>
-								<Text style={[styles.label, {textAlign: "center"}]}>
+								<Text style={[styles.label, {textAlign: "center", marginBottom: 6}]}>
 									Date (mm/dd)
 								</Text>
 
@@ -98,7 +106,7 @@ export function AppointmentCreate() {
 							</View>
 
 							<View>
-								<Text style={[styles.label, {textAlign: "center"}]}>
+								<Text style={[styles.label, {textAlign: "center", marginBottom: 6}]}>
 									Time (hh:mm)
 								</Text>
 
@@ -134,10 +142,10 @@ export function AppointmentCreate() {
 						</View>
 
 					</View>
-				{/* </Background> */}
+				</Background>
 			</ScrollView>
 
-			<ModalView visible={openGuildsModal}>
+			<ModalView visible={openGuildsModal} closeModal={handleCloseGuilds}>
 				<Guilds handleGuildSelect={handleGuildSelect} />
 			</ModalView>
 		</KeyboardAvoidingView>
