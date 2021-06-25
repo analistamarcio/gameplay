@@ -3,21 +3,29 @@ import {
 	View,
 	Text,
 	Image,
+	Alert,
+	ActivityIndicator,
 	ScrollView, // caso não caiba na tela, será possível dar um scroll para visualizar todos os componentes da tela (eu uso o zoom no iPhone)
 } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+
+import { useAuth } from '../../hooks/auth';
 
 import IllustrationImg from "../../assets/illustration.png"
+import { theme } from '../../global/styles/theme';
 import { styles } from "./styles"
 
 import { ButtonIcon } from "../../components/ButtonIcon";
 import { Background } from "../../components/Background";
 
 export function SignIn() {
-	const navigation = useNavigation();
+	const { loading, signIn } = useAuth();
 
-	function handleSignIn() {
-		navigation.navigate("Home");
+	async function handleSignIn() {
+		try {
+			await signIn();
+		} catch (error) {
+			Alert.alert(error);
+		}
 	}
 	
   return (
@@ -42,10 +50,13 @@ export function SignIn() {
 							favourite games with your friends
 						</Text>
 
-						<ButtonIcon
-							title="Login using Discord"
-							onPress={handleSignIn}
-						/>
+						{
+							loading ? <ActivityIndicator color={theme.colors.primary} /> :
+							<ButtonIcon
+								title="Login using Discord"
+								onPress={handleSignIn}
+							/>
+						}
 
 					</View>
 				</ScrollView>
