@@ -3,9 +3,11 @@ import React, {
 	useContext,
 	useState,
 	ReactNode,
+	useEffect,
 } from "react";
 
 import * as AuthSession from "expo-auth-session";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { SCOPE } = process.env;
 const { CLIENT_ID } = process.env;
@@ -14,6 +16,7 @@ const { REDIRECT_URI } = process.env;
 const { RESPONSE_TYPE } = process.env;
 
 import { api } from "../services/api";
+import { COLLECTION_USERS } from "../configs/database";
 
 type User = {
 	id: string;
@@ -28,6 +31,7 @@ type AuthContextData = {
 	user: User;
 	loading: boolean;
 	signIn: () => Promise<void>;
+	signOut: () => Promise<void>;
 }
 
 type AuthProviderProps = {
@@ -62,12 +66,15 @@ function AuthProvider({ children }: AuthProviderProps) {
 				
 				const firstName = userInfo.data.username.split(" ")[0];
 				userInfo.data.avatar = `${CDN_IMAGE}/avatars/${userInfo.data.id}/${userInfo.data.avatar}.png`;
-				
-				setUser({
+
+				const userData = {
 					...userInfo.data,
 					firstName,
 					token: params.access_token,
-				});
+				}
+				
+				await AsyncStorage.setItem(COLLECTION_USERS, JSON.stringify(userData));
+				setUser(userData);
 			}
 		} catch {
 			throw new Error("Authentication failed.");
@@ -76,11 +83,32 @@ function AuthProvider({ children }: AuthProviderProps) {
 		}
 	}
 	
+	async function signOut() {
+		setUser({} as User);
+		await AsyncStorage.removeItem(COLLECTION_USERS);
+	}
+	
+	async function loadUserStorageData() {
+		const storage = await AsyncStorage.getItem(COLLECTION_USERS);
+
+		if (storage) {
+			const userLogged = JSON.parse(storage) as User;
+			api.defaults.headers.authorization = `Bearer ${userLogged.token}`;
+
+			setUser(userLogged);
+		}
+	}
+	
+	useEffect(() => {
+		loadUserStorageData();
+	},[]);
+	
 	return (
 		<AuthContext.Provider value={{
 			user,
 			loading,
-			signIn
+			signIn,
+			signOut,
 		}}>
 			{children}
 		</AuthContext.Provider>

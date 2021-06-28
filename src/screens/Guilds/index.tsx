@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, FlatList } from 'react-native';
 
 import { Guild, GuildProps } from '../../components/Guild';
 import { ListDivider } from '../../components/ListDivider';
+import { Load } from '../../components/Load';
+import { api } from '../../services/api';
 
 import { styles } from './styles';
 
@@ -11,37 +13,40 @@ type Props = {
 }
 
 export function Guilds({ handleGuildSelect }: Props) {
-	const guilds = [
-		{
-			id: "1",
-			name: "Legendary 01",
-			icon: "image.png",
-			owner: true,
-		},
-		{
-			id: "2",
-			name: "Legendary 02",
-			icon: "image.png",
-			owner: false,
-		},
-	];
+	const [guilds, setGuilds] = useState<GuildProps[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	async function fetchGuild() {
+		const response = await api.get("/users/@me/guilds");
+
+		setGuilds(response.data);
+		setLoading(false);
+	}
+
+	useEffect(() => {
+		fetchGuild();
+	}, []);
+	
 	return (
 		<View style={styles.container}>
-			<FlatList
-				data={guilds}
-				keyExtractor={item => item.id}
-				renderItem={({ item }) => (
-					<Guild
-						data={item}
-						onPress={() => handleGuildSelect(item)}
-					/>
-				)}
-				showsVerticalScrollIndicator={false}
-				ItemSeparatorComponent={() => <ListDivider isCentered />}
-				ListHeaderComponent={() => <ListDivider isCentered />}
-				contentContainerStyle={{ paddingBottom: 16, paddingTop:100 }}
-				style={styles.guilds}
-			/>
+			{
+				loading ? <Load /> :
+				<FlatList
+					data={guilds}
+					keyExtractor={item => item.id}
+					renderItem={({ item }) => (
+						<Guild
+							data={item}
+							onPress={() => handleGuildSelect(item)}
+						/>
+					)}
+					showsVerticalScrollIndicator={false}
+					ItemSeparatorComponent={() => <ListDivider isCentered />}
+					ListHeaderComponent={() => <ListDivider isCentered />}
+					contentContainerStyle={{ paddingBottom: 16, paddingTop:100 }}
+					style={styles.guilds}
+				/>
+			}
 		</View>
 	)
 };
