@@ -43,11 +43,11 @@ export function Appointment({ data, ...rest }: Props) {
 				<View style={styles.content}>
 					<View style={styles.header}>
 						<Text style={styles.title}>
-							{ data.guild.name }
+							{ data.guild.name.substring(0,16) }
 						</Text>
 
 						<Text style={styles.category}>
-							{category.title}
+							{category === undefined ? "" : category.title}
 						</Text>
 					</View>
 

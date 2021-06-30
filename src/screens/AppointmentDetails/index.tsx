@@ -38,7 +38,7 @@ type GuildWidget = {
 	name: string;
 	instant_invite: string;
 	members: MemberProps[];
-	presence_count: number;
+	// presence_count: number;
 }
 
 export function AppointmentDetails() {
@@ -53,6 +53,13 @@ export function AppointmentDetails() {
 			const response = await api.get(`/guilds/${guildSelected.guild.id}/widget.json`);
 			setWidget(response.data);
 		} catch {
+			setWidget({
+				id: "",
+				name: "",
+				instant_invite: "",
+				members: [],
+				// presence_count: 0,
+			})
 			Alert.alert("Check if the Widget feature is enabled on this server.");
 		} finally {
 			setLoading(false);
@@ -114,7 +121,8 @@ export function AppointmentDetails() {
 				<>
 					<ListHeader
 						title="Gamers"
-						subtitle={`Total ${widget.presence_count}`}
+						subtitle={`Total ${widget.members.length}`}
+						// subtitle={`Total ${widget.presence_count}`}
 					/>
 
 					<FlatList
